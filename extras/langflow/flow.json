@@ -1,0 +1,43 @@
+{
+  "name": "Elastic BM25 Simple RAG",
+  "description": "Fluxo exemplo para Langflow chamando o FastAPI /api/ask",
+  "nodes": [
+    {
+      "id": "input",
+      "type": "Input",
+      "config": {
+        "input_type": "text",
+        "label": "Pergunta"
+      }
+    },
+    {
+      "id": "http",
+      "type": "HTTP",
+      "config": {
+        "url": "http://host.docker.internal:8000/api/ask",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": "{\"question\": \"{{input}}\", \"k\": 4}"
+      }
+    },
+    {
+      "id": "output",
+      "type": "Output",
+      "config": {
+        "label": "Resposta"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "input",
+      "target": "http"
+    },
+    {
+      "source": "http",
+      "target": "output"
+    }
+  ]
+}

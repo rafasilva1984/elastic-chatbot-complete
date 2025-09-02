@@ -1,0 +1,24 @@
+version: "3.9"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports: ["9200:9200"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  retriever-api:
+    build: ./retriever-api
+    environment:
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - ./retriever-api/.env
+    depends_on:
+      - elasticsearch
+    ports: ["8000:8000"]
